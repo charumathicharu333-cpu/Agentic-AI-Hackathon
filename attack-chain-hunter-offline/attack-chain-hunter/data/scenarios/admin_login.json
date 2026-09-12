@@ -1,0 +1,19 @@
+{
+  "id": "admin_login",
+  "name": "Suspicious administrator login",
+  "short_name": "Admin login",
+  "description": "An administrator signs in from an unseen location and triggers a safe session revocation response.",
+  "incident_id": "INC-2026-002",
+  "alert": {"alert_id": "ALERT-002", "signature": "Impossible Travel Administrator Login", "source_ip": "203.0.113.44", "destination": "admin-portal", "port": 443, "severity": "MEDIUM", "timestamp": "2026-09-12T12:05:01Z"},
+  "packet_metadata": {"source_ip": "203.0.113.44", "destination_ip": "10.20.0.30", "protocol": "TLS", "port": 443, "packet_count": 412, "bytes": 48200, "timestamp": "2026-09-12T12:05:01Z", "anomaly_score": 0.86},
+  "assets": [{"hostname": "admin-portal", "ip": "10.20.0.30", "owner": "IT", "operating_system": "Ubuntu 22.04", "service": "admin-console", "criticality": "high", "open_ports": [443]}],
+  "vulnerabilities": [{"cve_id": "CVE-2026-2201", "affected_service": "admin-console", "severity": "medium", "exploitability": 0.34, "description": "Legacy login endpoint lacks location risk scoring.", "remediation": "Require phishing-resistant MFA."}],
+  "server_logs": [{"timestamp": "2026-09-12T12:05:00Z", "username": "it-admin", "source_ip": "203.0.113.44", "endpoint": "/login", "action": "administrator login", "status": "success", "resource": "admin-console"}],
+  "identities": [{"username": "it-admin", "privilege": "administrator", "mfa_status": "verified", "active_session": true, "session_id": "sess-it-221", "compromised_status": "suspected"}],
+  "network_state": {"blocked_ips": [], "suspicious_ips": ["203.0.113.44"], "malicious_traffic": true},
+  "service_health": [{"service": "admin-console", "status": "healthy", "dependency": "identity-provider", "dependency_status": "healthy", "availability": 100}],
+  "attack_path": [{"id": "attacker", "label": "UNKNOWN LOCATION", "kind": "attacker", "state": "suspicious"}, {"id": "entry", "label": "ADMIN LOGIN", "kind": "entry", "state": "suspicious"}, {"id": "identity", "label": "it-admin", "kind": "identity", "state": "suspicious"}, {"id": "host", "label": "admin-portal", "kind": "host", "state": "suspicious"}],
+  "failure": null,
+  "expected_recovery": "REVOKE_SESSION",
+  "verification": {"service": "healthy", "required_services": ["admin-console"], "account_secured": true}
+}

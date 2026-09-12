@@ -1,0 +1,19 @@
+{
+  "id": "lateral_movement",
+  "name": "Lateral movement between hosts",
+  "short_name": "Lateral movement",
+  "description": "A service account hops from a web host into an internal application tier.",
+  "incident_id": "INC-2026-003",
+  "alert": {"alert_id": "ALERT-003", "signature": "East-West RDP Sweep", "source_ip": "10.20.0.11", "destination": "app-02", "port": 3389, "severity": "HIGH", "timestamp": "2026-09-12T13:11:01Z"},
+  "packet_metadata": {"source_ip": "10.20.0.11", "destination_ip": "10.20.0.15", "protocol": "TCP", "port": 3389, "packet_count": 962, "bytes": 122100, "timestamp": "2026-09-12T13:11:01Z", "anomaly_score": 0.91},
+  "assets": [{"hostname": "web-01", "ip": "10.20.0.11", "owner": "Web", "operating_system": "Windows Server 2022", "service": "web-gateway", "criticality": "high", "open_ports": [443, 3389]}, {"hostname": "app-02", "ip": "10.20.0.15", "owner": "Platform", "operating_system": "Windows Server 2022", "service": "orders-api", "criticality": "high", "open_ports": [443, 3389]}],
+  "vulnerabilities": [{"cve_id": "CVE-2026-3010", "affected_service": "remote-desktop", "severity": "high", "exploitability": 0.76, "description": "Internal RDP policy allows unnecessary service-account access.", "remediation": "Restrict east-west administrative paths."}],
+  "server_logs": [{"timestamp": "2026-09-12T13:10:58Z", "username": "svc-orders", "source_ip": "10.20.0.11", "endpoint": "app-02:3389", "action": "remote login", "status": "success", "resource": "orders-api"}, {"timestamp": "2026-09-12T13:11:00Z", "username": "svc-orders", "source_ip": "10.20.0.11", "endpoint": "app-02:3389", "action": "credential reuse", "status": "success", "resource": "orders-api"}],
+  "identities": [{"username": "svc-orders", "privilege": "service", "mfa_status": "not_applicable", "active_session": true, "session_id": "sess-svc-301", "compromised_status": "suspected"}],
+  "network_state": {"blocked_ips": [], "suspicious_ips": ["10.20.0.11"], "malicious_traffic": true},
+  "service_health": [{"service": "orders-api", "status": "healthy", "dependency": "orders-db", "dependency_status": "healthy", "availability": 100}],
+  "attack_path": [{"id": "attacker", "label": "COMPROMISED WEB HOST", "kind": "attacker", "state": "suspicious"}, {"id": "entry", "label": "RDP SWEEP", "kind": "entry", "state": "suspicious"}, {"id": "identity", "label": "svc-orders", "kind": "identity", "state": "compromised"}, {"id": "host", "label": "app-02", "kind": "host", "state": "compromised"}, {"id": "resource", "label": "Orders API", "kind": "resource", "state": "compromised"}],
+  "failure": {"action": "ISOLATE_HOST", "type": "service_failure", "reason": "Isolation would interrupt the orders API while its database dependency is in a maintenance window."},
+  "expected_recovery": "REVOKE_SESSION + BLOCK_IP",
+  "verification": {"service": "healthy", "required_services": ["orders-api"], "account_secured": true}
+}

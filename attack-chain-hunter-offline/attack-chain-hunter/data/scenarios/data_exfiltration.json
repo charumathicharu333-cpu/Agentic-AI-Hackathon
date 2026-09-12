@@ -1,0 +1,19 @@
+{
+  "id": "data_exfiltration",
+  "name": "Data exfiltration burst",
+  "short_name": "Exfiltration",
+  "description": "A compromised application session sends a high-volume archive to an external destination.",
+  "incident_id": "INC-2026-004",
+  "alert": {"alert_id": "ALERT-004", "signature": "Sensitive Data Egress Spike", "source_ip": "10.20.0.14", "destination": "198.51.100.20", "port": 443, "severity": "CRITICAL", "timestamp": "2026-09-12T14:44:01Z"},
+  "packet_metadata": {"source_ip": "10.20.0.14", "destination_ip": "198.51.100.20", "protocol": "TLS", "port": 443, "packet_count": 15400, "bytes": 48200000, "timestamp": "2026-09-12T14:44:01Z", "anomaly_score": 0.99},
+  "assets": [{"hostname": "app-01", "ip": "10.20.0.14", "owner": "Platform", "operating_system": "Ubuntu 22.04", "service": "payments-api", "criticality": "critical", "open_ports": [443, 8443]}, {"hostname": "db-01", "ip": "10.20.0.20", "owner": "Data", "operating_system": "Ubuntu 22.04", "service": "sensitive-database", "criticality": "critical", "open_ports": [5432]}],
+  "vulnerabilities": [{"cve_id": "CVE-2026-1702", "affected_service": "payments-api", "severity": "critical", "exploitability": 0.88, "description": "Export endpoint permits oversized result sets.", "remediation": "Disable export endpoint and rotate application credentials."}],
+  "server_logs": [{"timestamp": "2026-09-12T14:43:56Z", "username": "reporting-bot", "source_ip": "10.20.0.14", "endpoint": "/reports/export", "action": "bulk export", "status": "success", "resource": "customer_records"}, {"timestamp": "2026-09-12T14:44:00Z", "username": "reporting-bot", "source_ip": "10.20.0.14", "endpoint": "/reports/export", "action": "archive upload", "status": "success", "resource": "198.51.100.20"}],
+  "identities": [{"username": "reporting-bot", "privilege": "service", "mfa_status": "not_applicable", "active_session": true, "session_id": "sess-report-440", "compromised_status": "suspected"}],
+  "network_state": {"blocked_ips": [], "suspicious_ips": ["198.51.100.20"], "malicious_traffic": true},
+  "service_health": [{"service": "payments-api", "status": "healthy", "dependency": "db-01", "dependency_status": "healthy", "availability": 100}],
+  "attack_path": [{"id": "attacker", "label": "EXTERNAL DESTINATION", "kind": "attacker", "state": "suspicious"}, {"id": "entry", "label": "DATA EGRESS", "kind": "entry", "state": "compromised"}, {"id": "identity", "label": "reporting-bot", "kind": "identity", "state": "compromised"}, {"id": "host", "label": "app-01", "kind": "host", "state": "compromised"}, {"id": "resource", "label": "Customer records", "kind": "resource", "state": "compromised"}],
+  "failure": null,
+  "expected_recovery": "REVOKE_SESSION + BLOCK_IP",
+  "verification": {"service": "healthy", "required_services": ["payments-api"], "account_secured": true}
+}

@@ -1,0 +1,19 @@
+{
+  "id": "service_dependency_failure",
+  "name": "Service dependency failure during containment",
+  "short_name": "Dependency failure",
+  "description": "Host isolation is unsafe because a required database dependency is already unavailable; the agent chooses a narrower action first.",
+  "incident_id": "INC-2026-006",
+  "alert": {"alert_id": "ALERT-006", "signature": "Suspicious Service Account Activity", "source_ip": "192.0.2.88", "destination": "orders-api", "port": 443, "severity": "HIGH", "timestamp": "2026-09-12T16:22:01Z"},
+  "packet_metadata": {"source_ip": "192.0.2.88", "destination_ip": "10.20.0.15", "protocol": "TLS", "port": 443, "packet_count": 980, "bytes": 183500, "timestamp": "2026-09-12T16:22:01Z", "anomaly_score": 0.9},
+  "assets": [{"hostname": "app-02", "ip": "10.20.0.15", "owner": "Platform", "operating_system": "Ubuntu 22.04", "service": "orders-api", "criticality": "critical", "open_ports": [443]}, {"hostname": "orders-db", "ip": "10.20.0.25", "owner": "Data", "operating_system": "Ubuntu 22.04", "service": "orders-database", "criticality": "critical", "open_ports": [5432]}],
+  "vulnerabilities": [{"cve_id": "CVE-2026-5020", "affected_service": "orders-api", "severity": "high", "exploitability": 0.72, "description": "Synthetic service token accepts a stale audience claim.", "remediation": "Rotate service token and enforce audience validation."}],
+  "server_logs": [{"timestamp": "2026-09-12T16:21:58Z", "username": "svc-orders", "source_ip": "192.0.2.88", "endpoint": "/orders", "action": "service token reuse", "status": "success", "resource": "orders-api"}],
+  "identities": [{"username": "svc-orders", "privilege": "service", "mfa_status": "not_applicable", "active_session": true, "session_id": "sess-orders-602", "compromised_status": "suspected"}],
+  "network_state": {"blocked_ips": [], "suspicious_ips": ["192.0.2.88"], "malicious_traffic": true},
+  "service_health": [{"service": "orders-api", "status": "degraded", "dependency": "orders-db", "dependency_status": "unavailable", "availability": 71}],
+  "attack_path": [{"id": "attacker", "label": "EXTERNAL IP", "kind": "attacker", "state": "suspicious"}, {"id": "entry", "label": "SERVICE TOKEN REUSE", "kind": "entry", "state": "suspicious"}, {"id": "identity", "label": "svc-orders", "kind": "identity", "state": "compromised"}, {"id": "host", "label": "app-02", "kind": "host", "state": "compromised"}, {"id": "resource", "label": "Orders database", "kind": "resource", "state": "unknown"}],
+  "failure": {"action": "ISOLATE_HOST", "type": "service_failure", "reason": "Database dependency unavailable; isolation would widen the service outage before the session is revoked."},
+  "expected_recovery": "REVOKE_SESSION + BLOCK_IP",
+  "verification": {"service": "healthy", "required_services": ["orders-api"], "account_secured": true}
+}
