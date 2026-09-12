@@ -1,44 +1,6 @@
 # Agentic-AI-Hackathon
-
-Absolutely. Below is a **GitHub-ready `README.md`** for your **Aerix – Autonomous Attack-Chain Hunter & Recovery Agent**. It is written to match your Tech Zephyr Problem 9 and, importantly, highlights the rubric areas: **autonomy, tool interaction, failure recovery, adaptation, and verification**.
-
-You can copy everything below directly into `README.md`.
-
-````markdown
-# 🛡️ Autonomous Attack-Chain Hunter & Recovery Agent
-
-### Investigate → Understand → Respond → Adapt → Verify
-
-**Team Aerix**  
-**Tech Zephyr 4.0 – Agentic AI Hackathon**  
-**Track 5 – Cybersecurity**  
-**Problem 9 – Autonomous SOC Investigation & Response Agent**
-
 ---
-
-## 🚀 Overview
-
-Modern Security Operations Centers (SOCs) receive a large number of security alerts every day.
-
-However, an alert alone does not always tell us:
-
-- What actually happened?
-- Was the attack successful?
-- Which system or account was affected?
-- What is the attack path?
-- Did the response actually stop the attack?
-- What should we do if the first response fails?
-
-Our project, **Autonomous Attack-Chain Hunter & Recovery Agent**, addresses this problem using an **offline-first Agentic AI approach**.
-
-Instead of simply detecting an alert, the agent can:
-
-> **Investigate → Analyze → Decide → Act → Observe → Adapt → Replan → Recover → Verify**
-
-The system operates completely inside a **safe simulated sandbox environment**.
-
----
-
+LIVE:https://agentic-ai-hackathon-lqxt.onrender.com
 # 🎯 Problem Statement
 
 Traditional security monitoring systems often generate alerts and require security analysts to manually investigate them.
